@@ -7,7 +7,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -17,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
-// CORS setup
+// CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -36,25 +35,25 @@ if (!apiKey) {
     process.exit(1);
 }
 console.log('✅ API Key found, length:', apiKey.length);
+console.log('🔑 API Key prefix:', apiKey.substring(0, 4));
 
-// Initialize Gemini with correct model
+// Initialize Gemini with CORRECT model - GEMINI-1.5-FLASH
 const genAI = new GoogleGenerativeAI(apiKey);
-
-// Use the correct model name - gemini-1.5-flash is the latest
 const model = genAI.getGenerativeModel({ 
-    model: 'gemini-1.5-flash',
+    model: 'gemini-1.5-flash',  // ✅ यह सही model है
     generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 800,
     }
 });
-console.log('✅ Gemini model initialized: gemini-1.5-flash');
+console.log('✅ Gemini model initialized: gemini-1.5-flash'); // यह लाइन अब सही दिखेगी
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
     res.json({ 
         status: 'ok', 
         message: 'API is working',
+        model: 'gemini-1.5-flash',
         apiKeySet: !!process.env.GEMINI_API_KEY
     });
 });
@@ -70,7 +69,6 @@ app.post('/api/chat', async (req, res) => {
 
         console.log('📨 Message received:', message);
         
-        // Generate response
         const result = await model.generateContent(message);
         const response = await result.response;
         const text = response.text();
@@ -94,6 +92,6 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`✅ Server running on port ${PORT}`);
     console.log(`📁 Public folder: ${path.join(__dirname, 'public')}`);
 });
