@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat App</title>
+    <title>AI Chatbot</title>
     <style>
         * {
             margin: 0;
@@ -211,8 +211,6 @@
             
             messageDiv.appendChild(contentDiv);
             chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
@@ -241,14 +239,10 @@
             const message = userInput.value.trim();
             if (!message) return;
             
-            // Add user message
             addMessage(message, true);
             userInput.value = '';
-            
-            // Show typing indicator
             showTypingIndicator();
             
-            // Disable button and input
             sendButton.disabled = true;
             userInput.disabled = true;
             
@@ -265,28 +259,22 @@
                 });
                 
                 const data = await response.json();
-                
-                // Remove typing indicator
                 removeTypingIndicator();
                 
                 if (response.ok) {
-                    // Add AI response
                     addMessage(data.response, false);
-                    
-                    // Save to history
                     messageHistory.push(
                         { role: 'user', parts: [{ text: message }] },
                         { role: 'model', parts: [{ text: data.response }] }
                     );
                 } else {
-                    addMessage('क्षमा करें, कुछ गलती हो गई। कृपया फिर से प्रयास करें।', false);
+                    addMessage('क्षमा करें, कुछ गलती हो गई।', false);
                 }
             } catch (error) {
                 removeTypingIndicator();
-                addMessage('क्षमा करें, नेटवर्क एरर हो गया। कृपया फिर से प्रयास करें।', false);
+                addMessage('क्षमा करें, नेटवर्क एरर हो गया।', false);
                 console.error('Error:', error);
             } finally {
-                // Enable button and input
                 sendButton.disabled = false;
                 userInput.disabled = false;
                 userInput.focus();
