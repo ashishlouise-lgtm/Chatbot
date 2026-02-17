@@ -27,7 +27,7 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ 
-    model: 'gemini-2.5-flash-preview',
+    model: 'gemini-1.5-flash',
     generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 800,
