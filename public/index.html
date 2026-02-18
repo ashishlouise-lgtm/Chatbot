@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gemini AI Premium Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .chat-container {
+      width: 95%;
+      max-width: 420px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      color: white;
+      background: rgba(0,0,0,0.2);
+    }
+
+    #chat {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 14px;
+      margin: 6px 0;
+      border-radius: 15px;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .user {
+      align-self: flex-end;
+      background: rgba(0, 255, 150, 0.3);
+      color: white;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    input::placeholder {
+      color: #ddd;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background: #00c896;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <header>💎 Gemini Premium AI</header>
+
+  <div id="chat"></div>
+
+  <div class="input-area">
+    <input type="text" id="prompt" placeholder="Ask anything...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+async function sendMessage() {
+  const input = document.getElementById("prompt");
+  const message = input.value;
+  if (!message) return;
+
+  addMessage(message, "user");
+  input.value = "";
+
+  const response = await fetch("/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt: message })
+  });
+
+  const data = await response.json();
+  addMessage(data.text, "bot");
+}
+
+function addMessage(text, type) {
+  const chat = document.getElementById("chat");
+  const msg = document.createElement("div");
+  msg.className = "message " + type;
+  msg.innerText = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
